@@ -1,0 +1,31 @@
+{
+  "name": "upi-transaction-management-system",
+  "version": "1.0.0",
+  "description": "A complete UPI Transaction Management System built with Node.js, Express, MySQL, EJS, and Bootstrap.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "upi",
+    "express",
+    "mysql",
+    "ejs",
+    "mvc"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "mysql2": "^3.10.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

@@ -1,0 +1,38 @@
+<%- include('partials/header') %>
+
+<% if (!transaction) { %>
+  <div class="detail-card mx-auto mt-4 text-center">
+    <h1 class="h4">Transaction not found</h1>
+    <p class="text-muted mb-3">This transaction could not be loaded.</p>
+    <a href="/transaction/history" class="btn btn-primary">Back to History</a>
+  </div>
+<% } else { %>
+<div class="detail-card mx-auto mt-4">
+  <div class="d-flex justify-content-between align-items-start gap-3">
+    <div>
+      <h1 class="h3 mb-1">Transaction Detail</h1>
+      <p class="text-muted mb-0"><%= transaction.reference_no %></p>
+    </div>
+    <span class="badge status-<%= transaction.status.toLowerCase() %>"><%= transaction.status %></span>
+  </div>
+  <hr>
+  <dl class="row mb-0">
+    <dt class="col-sm-4">Sender</dt>
+    <dd class="col-sm-8"><%= transaction.sender_name %> (<%= transaction.sender_upi %>)</dd>
+    <dt class="col-sm-4">Receiver</dt>
+    <dd class="col-sm-8"><%= transaction.receiver_name %> (<%= transaction.receiver_upi %>)</dd>
+    <dt class="col-sm-4">Bank</dt>
+    <dd class="col-sm-8"><%= transaction.bank_name %></dd>
+    <dt class="col-sm-4">Account No</dt>
+    <dd class="col-sm-8"><%= transaction.account_no %></dd>
+    <dt class="col-sm-4">Amount</dt>
+    <dd class="col-sm-8">Rs. <%= Number(transaction.amount).toFixed(2) %></dd>
+    <dt class="col-sm-4">Type</dt>
+    <dd class="col-sm-8"><%= transaction.transaction_type %></dd>
+    <dt class="col-sm-4">Date</dt>
+    <dd class="col-sm-8"><%= new Date(transaction.created_at).toLocaleString() %></dd>
+  </dl>
+</div>
+<% } %>
+
+<%- include('partials/footer') %>

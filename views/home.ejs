@@ -1,0 +1,103 @@
+<%- include('partials/header') %>
+
+<section class="home-hero">
+  <div class="row align-items-center g-5">
+    <div class="col-lg-6">
+      <p class="hero-kicker">UPI Transaction Management System</p>
+      <h1 class="hero-title">Manage digital payments with clarity.</h1>
+      <p class="hero-copy">
+        A clean dashboard for users, linked bank accounts, UPI transfers, balance checks,
+        and transaction history backed by MySQL.
+      </p>
+      <div class="hero-actions">
+        <% if (currentUser) { %>
+          <a href="/dashboard" class="btn btn-primary btn-lg">Open Dashboard</a>
+        <% } else { %>
+          <a href="/login" class="btn btn-primary btn-lg">Login</a>
+          <a href="/signup" class="btn btn-outline-primary btn-lg">Create Account</a>
+        <% } %>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="phone-preview" aria-label="UPI dashboard preview">
+        <div class="phone-topbar"></div>
+        <div class="balance-panel">
+          <span>Available Balance</span>
+          <strong>Rs. 48,250.00</strong>
+        </div>
+        <div class="quick-actions">
+          <span>Pay</span>
+          <span>Bank</span>
+          <span>History</span>
+        </div>
+        <div class="preview-list">
+          <div class="preview-row">
+            <div>
+              <strong>Sent to priya@upi</strong>
+              <span>Reference UPI84291</span>
+            </div>
+            <b>- Rs. 750</b>
+          </div>
+          <div class="preview-row success-row">
+            <div>
+              <strong>Received from arjun@upi</strong>
+              <span>Reference UPI93815</span>
+            </div>
+            <b>+ Rs. 1,200</b>
+          </div>
+          <div class="preview-row">
+            <div>
+              <strong>Linked HDFC Bank</strong>
+              <span>Account ending 1045</span>
+            </div>
+            <b>Active</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="home-section">
+  <div class="section-heading">
+    <span>What you can do</span>
+    <h2>Everything needed for a simple UPI workflow</h2>
+  </div>
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="info-card">
+        <div class="card-icon">01</div>
+        <h5>Create User Profiles</h5>
+        <p>Register users with phone number, email, password, and a unique UPI ID.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="info-card">
+        <div class="card-icon">02</div>
+        <h5>Link Bank Accounts</h5>
+        <p>Add account details, IFSC codes, balances, and encrypted UPI PINs.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="info-card">
+        <div class="card-icon">03</div>
+        <h5>Track Transactions</h5>
+        <p>Send money, validate payments, and review transaction status in one place.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="home-band">
+  <div>
+    <span>Ready when you are</span>
+    <h2>Start from the home page, then move into your account.</h2>
+  </div>
+  <% if (currentUser) { %>
+    <a href="/dashboard" class="btn btn-light">Go to Dashboard</a>
+  <% } else { %>
+    <a href="/login" class="btn btn-light">Login to Continue</a>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>

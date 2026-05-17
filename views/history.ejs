@@ -1,0 +1,57 @@
+<%- include('partials/header') %>
+<% const safeFilters = typeof filters !== 'undefined' && filters ? filters : {}; %>
+<% const safeTransactions = Array.isArray(transactions) ? transactions : []; %>
+
+<div class="mt-4 mb-3">
+  <h1 class="h3">Transaction History</h1>
+  <form class="row g-2" action="/transaction/history" method="GET">
+    <div class="col-md-5">
+      <input type="text" name="reference_no" class="form-control" placeholder="Search reference number" value="<%= safeFilters.reference_no || '' %>">
+    </div>
+    <div class="col-md-4">
+      <select name="status" class="form-select">
+        <option value="">All Status</option>
+        <option value="SUCCESS" <%= safeFilters.status === 'SUCCESS' ? 'selected' : '' %>>SUCCESS</option>
+        <option value="FAILED" <%= safeFilters.status === 'FAILED' ? 'selected' : '' %>>FAILED</option>
+        <option value="PENDING" <%= safeFilters.status === 'PENDING' ? 'selected' : '' %>>PENDING</option>
+      </select>
+    </div>
+    <div class="col-md-3 d-grid">
+      <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+  </form>
+</div>
+
+<div class="table-responsive surface">
+  <table class="table align-middle mb-0">
+    <thead>
+      <tr>
+        <th>Reference</th>
+        <th>Sender</th>
+        <th>Receiver</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (safeTransactions.length === 0) { %>
+        <tr><td colspan="7" class="text-center text-muted">No transactions found.</td></tr>
+      <% } %>
+      <% safeTransactions.forEach(transaction => { %>
+        <tr>
+          <td><%= transaction.reference_no %></td>
+          <td><%= transaction.sender_upi %></td>
+          <td><%= transaction.receiver_upi %></td>
+          <td>Rs. <%= Number(transaction.amount).toFixed(2) %></td>
+          <td><span class="badge status-<%= transaction.status.toLowerCase() %>"><%= transaction.status %></span></td>
+          <td><%= new Date(transaction.created_at).toLocaleString() %></td>
+          <td><a href="/transaction/<%= transaction.tr_id %>" class="btn btn-sm btn-outline-primary">View</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('partials/footer') %>

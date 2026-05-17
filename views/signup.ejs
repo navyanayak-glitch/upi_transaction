@@ -1,0 +1,31 @@
+<%- include('partials/header') %>
+
+<div class="auth-card mx-auto mt-4">
+  <h2 class="mb-3">Create Account</h2>
+  <form action="/signup" method="POST">
+    <div class="mb-3">
+      <label class="form-label">Name</label>
+      <input type="text" name="name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Phone Number</label>
+      <input type="text" name="phone_no" class="form-control" maxlength="15" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input type="email" name="email_id" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">UPI ID</label>
+      <input type="text" name="upi_id" class="form-control" placeholder="name@upi" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" minlength="6" required>
+    </div>
+    <button class="btn btn-primary w-100" type="submit">Signup</button>
+  </form>
+  <p class="mt-3 mb-0 text-center">Already registered? <a href="/login">Login</a></p>
+</div>
+
+<%- include('partials/footer') %>

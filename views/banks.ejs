@@ -1,0 +1,19 @@
+<%- include('partials/header') %>
+
+<div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+  <h1 class="h3 mb-0">Supported Banks</h1>
+  <a href="/bank/add-account" class="btn btn-primary">Link Account</a>
+</div>
+
+<div class="row g-3">
+  <% banks.forEach(bank => { %>
+    <div class="col-md-6 col-lg-4">
+      <div class="info-card h-100">
+        <h5><%= bank.bank_name %></h5>
+        <p class="text-muted mb-0"><%= bank.api_endpoint || 'UPI endpoint unavailable' %></p>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,36 @@
+<%- include('partials/header') %>
+
+<div class="row g-4 mt-4">
+  <div class="col-lg-5">
+    <div class="detail-card h-100">
+      <h1 class="h3 mb-3">Profile</h1>
+      <p><strong>Name:</strong> <%= user.name %></p>
+      <p><strong>Phone:</strong> <%= user.phone_no %></p>
+      <p><strong>Email:</strong> <%= user.email_id %></p>
+      <p><strong>UPI ID:</strong> <%= user.upi_id %></p>
+      <p class="mb-0"><strong>Joined:</strong> <%= new Date(user.created_at).toLocaleDateString() %></p>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="detail-card h-100">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 mb-0">Accounts</h2>
+        <a href="/bank/add-account" class="btn btn-sm btn-outline-primary">Add</a>
+      </div>
+      <% if (accounts.length === 0) { %>
+        <p class="text-muted mb-0">No accounts linked.</p>
+      <% } %>
+      <% accounts.forEach(account => { %>
+        <div class="account-row">
+          <div>
+            <strong><%= account.bank_name %></strong>
+            <p class="mb-0 text-muted"><%= account.account_no %> | <%= account.ifsc_code %></p>
+          </div>
+          <span>Rs. <%= Number(account.balance).toFixed(2) %></span>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

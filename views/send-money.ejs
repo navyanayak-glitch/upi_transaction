@@ -1,0 +1,41 @@
+<%- include('partials/header') %>
+
+<div class="form-card mx-auto mt-4">
+  <h1 class="h3 mb-3">Send Money</h1>
+  <% if (accounts.length === 0) { %>
+    <div class="alert alert-warning">Please link a bank account before sending money.</div>
+    <a href="/bank/add-account" class="btn btn-primary">Add Bank Account</a>
+  <% } else { %>
+    <form action="/upi/pay" method="POST">
+      <div class="mb-3">
+        <label class="form-label">From Account</label>
+        <select name="account_no" class="form-select" required>
+          <% accounts.forEach(account => { %>
+            <option value="<%= account.account_no %>">
+              <%= account.bank_name %> - <%= account.account_no %> (Rs. <%= Number(account.balance).toFixed(2) %>)
+            </option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Receiver UPI ID</label>
+        <div class="input-group">
+          <input type="text" name="receiver_upi_id" id="receiverUpiId" class="form-control" required>
+          <button class="btn btn-outline-primary" type="button" id="verifyUpiBtn">Verify</button>
+        </div>
+        <small id="verifyResult" class="form-text"></small>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Amount</label>
+        <input type="number" name="amount" class="form-control" min="1" step="0.01" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">UPI PIN</label>
+        <input type="password" name="upi_pin" class="form-control" minlength="4" maxlength="6" required>
+      </div>
+      <button class="btn btn-primary w-100" type="submit">Pay Now</button>
+    </form>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>
