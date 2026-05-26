@@ -3,11 +3,11 @@
 <section class="home-hero">
   <div class="row align-items-center g-5">
     <div class="col-lg-6">
-      <p class="hero-kicker">UPI Transaction Management System</p>
-      <h1 class="hero-title">Manage digital payments with clarity.</h1>
+      <p class="hero-kicker">Fast, simple, secure UPI payments</p>
+      <h1 class="hero-title">Your money movement, beautifully organized.</h1>
       <p class="hero-copy">
-        A clean dashboard for users, linked bank accounts, UPI transfers, balance checks,
-        and transaction history backed by MySQL.
+        Send money, manage linked accounts, watch balances update, and keep every
+        transaction easy to find from one polished dashboard.
       </p>
       <div class="hero-actions">
         <% if (currentUser) { %>
@@ -16,6 +16,11 @@
           <a href="/login" class="btn btn-primary btn-lg">Login</a>
           <a href="/signup" class="btn btn-outline-primary btn-lg">Create Account</a>
         <% } %>
+      </div>
+      <div class="hero-trust-strip" aria-label="Payment highlights">
+        <span>Instant transfers</span>
+        <span>Linked accounts</span>
+        <span>Live history</span>
       </div>
     </div>
     <div class="col-lg-6">
@@ -29,6 +34,11 @@
           <span>Pay</span>
           <span>Bank</span>
           <span>History</span>
+        </div>
+        <div class="received-preview">
+          <span>New</span>
+          <strong>Rs. 1,200 received</strong>
+          <small>Tap notification to open history</small>
         </div>
         <div class="preview-list">
           <div class="preview-row">
@@ -61,7 +71,7 @@
 <section class="home-section">
   <div class="section-heading">
     <span>What you can do</span>
-    <h2>Everything needed for a simple UPI workflow</h2>
+    <h2>Every payment flow in one confident place</h2>
   </div>
   <div class="row g-3">
     <div class="col-md-4">

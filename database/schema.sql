@@ -15,7 +15,6 @@ CREATE TABLE users (
   upi_id VARCHAR(100) NOT NULL UNIQUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
 CREATE TABLE banks (
   bank_id INT AUTO_INCREMENT PRIMARY KEY,
   bank_name VARCHAR(100) NOT NULL UNIQUE,
@@ -24,7 +23,7 @@ CREATE TABLE banks (
 );
 
 CREATE TABLE bank_accounts (
-  account_no VARCHAR(30) PRIMARY KEY,
+  account_no VARCHAR(10) PRIMARY KEY,
   user_id INT NOT NULL,
   bank_id INT NOT NULL,
   ifsc_code VARCHAR(20) NOT NULL,
@@ -47,7 +46,7 @@ CREATE TABLE transactions (
   account_no VARCHAR(30) NOT NULL,
   reference_no VARCHAR(50) NOT NULL UNIQUE,
   amount DECIMAL(12, 2) NOT NULL,
-  status ENUM('SUCCESS', 'FAILED', 'PENDING') NOT NULL DEFAULT 'PENDING',
+  status ENUM('SUCCESS', 'FAILED') NOT NULL,
   transaction_type ENUM('DEBIT', 'CREDIT') NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT chk_transaction_amount CHECK (amount > 0),

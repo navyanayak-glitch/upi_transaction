@@ -33,3 +33,98 @@ if (verifyButton) {
     }
   });
 }
+
+const RECEIVED_PAYMENT_KEY = 'upi:lastSeenReceivedTransactionId';
+
+// Realtime socket connection for instant notifications
+if (document.body && document.body.dataset.authenticated === 'true') {
+  try {
+    const userId = document.body.dataset.userId;
+    const script = document.createElement('script');
+    script.src = '/socket.io/socket.io.js';
+    script.onload = () => {
+      const socket = io();
+      if (userId) socket.emit('join', { userId });
+
+      socket.on('money_received', (payload) => {
+        // Show the same toast UI used for polling
+        buildReceivedPaymentToast(payload.transaction);
+      });
+    };
+    document.body.appendChild(script);
+  } catch (e) {
+    // ignore realtime failures
+  }
+}
+
+function buildReceivedPaymentToast(transaction) {
+  const existingToast = document.querySelector('.received-payment-toast');
+
+  if (existingToast) {
+    existingToast.remove();
+  }
+
+  const toast = document.createElement('button');
+  toast.type = 'button';
+  toast.className = 'received-payment-toast';
+
+  const icon = document.createElement('span');
+  icon.className = 'toast-icon';
+  icon.textContent = '+';
+
+  const content = document.createElement('span');
+  content.className = 'toast-content';
+
+  const title = document.createElement('strong');
+  title.textContent = 'Money received';
+
+  const details = document.createElement('span');
+  details.textContent = `Rs. ${Number(transaction.amount).toFixed(2)} from ${transaction.sender_name || transaction.sender_upi}`;
+
+  const action = document.createElement('span');
+  action.className = 'toast-arrow';
+  action.textContent = 'View';
+
+  content.append(title, details);
+  toast.append(icon, content, action);
+
+  toast.addEventListener('click', () => {
+    localStorage.setItem(RECEIVED_PAYMENT_KEY, String(transaction.tr_id));
+    window.location.href = `/transaction/history?highlight=${transaction.tr_id}`;
+  });
+
+  document.body.appendChild(toast);
+
+  window.setTimeout(() => {
+    toast.classList.add('is-visible');
+  }, 50);
+}
+
+async function checkLatestReceivedPayment() {
+  try {
+    const response = await fetch('/transaction/latest-received');
+
+    if (!response.ok) {
+      return;
+    }
+
+    const { transaction } = await response.json();
+
+    if (!transaction) {
+      return;
+    }
+
+    const lastSeenId = localStorage.getItem(RECEIVED_PAYMENT_KEY);
+
+    if (String(transaction.tr_id) !== lastSeenId) {
+      buildReceivedPaymentToast(transaction);
+    }
+  } catch (error) {
+    // Ignore notification failures so normal page actions keep working.
+  }
+}
+
+if (document.body && document.body.dataset.authenticated === 'true') {
+  checkLatestReceivedPayment();
+  window.setInterval(checkLatestReceivedPayment, 15000);
+}

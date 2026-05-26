@@ -35,7 +35,6 @@ async function getTransactionsByUser(userId, filters = {}) {
     WHERE (t.sender_id = ? OR t.receiver_id = ?) ${filterSql}
     ORDER BY t.created_at DESC
   `;
-
   const [rows] = await pool.execute(sql, values);
   return rows;
 }
@@ -74,6 +73,25 @@ async function getTransactionById(transactionId, userId) {
   return rows[0];
 }
 
+async function getLatestReceivedTransaction(userId) {
+  const sql = `
+    SELECT
+      t.tr_id,
+      t.reference_no,
+      t.amount,
+      t.created_at,
+      sender.name AS sender_name,
+      sender.upi_id AS sender_upi
+    FROM transactions t
+    INNER JOIN users sender ON t.sender_id = sender.user_id
+    WHERE t.receiver_id = ? AND t.status = 'SUCCESS'
+    ORDER BY t.created_at DESC
+    LIMIT 1
+  `;
+  const [rows] = await pool.execute(sql, [userId]);
+  return rows[0] || null;
+}
+
 async function createFailedTransaction(transaction) {
   const sql = `
     INSERT INTO transactions
@@ -95,5 +113,6 @@ module.exports = {
   getTransactionsByUser,
   getRecentTransactions,
   getTransactionById,
+  getLatestReceivedTransaction,
   createFailedTransaction
 };

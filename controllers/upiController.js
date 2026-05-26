@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
 const bankModel = require('../models/bankModel');
 const transactionModel = require('../models/transactionModel');
+const { getIO } = require('../realtime');
 
 async function showPay(req, res) {
   const accounts = await bankModel.getAccountsByUser(req.session.user.user_id);
@@ -115,6 +116,25 @@ async function pay(req, res) {
       type: 'success',
       text: `Payment successful. Reference No: ${referenceNo}`
     };
+
+    // Emit realtime notification to receiver (if socket server available)
+    try {
+      const io = getIO();
+      if (io) {
+        io.to(`user_${receiver.user_id}`).emit('money_received', {
+          transaction: {
+            tr_id: referenceNo,
+            reference_no: referenceNo,
+            amount: transferAmount,
+            created_at: new Date(),
+            sender_name: req.session.user.name,
+            sender_upi: req.session.user.upi_id
+          }
+        });
+      }
+    } catch (e) {
+      // ignore realtime send errors
+    }
     return res.redirect('/transaction/history');
   } catch (error) {
     await connection.rollback();

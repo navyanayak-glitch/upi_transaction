@@ -11,6 +11,8 @@ const transactionRoutes = require('./routes/transactionRoutes');
 const upiRoutes = require('./routes/upiRoutes');
 
 const app = express();
+const http = require('http');
+const { initRealtime } = require('./realtime');
 const PORT = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
@@ -68,6 +70,11 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
+const server = http.createServer(app);
+
+// Initialize realtime (Socket.IO) with the HTTP server
+initRealtime(server);
+
+server.listen(PORT, () => {
   console.log(`UPI Transaction Management System running on http://localhost:${PORT}`);
 });

@@ -1,6 +1,7 @@
 <%- include('partials/header') %>
 <% const safeFilters = typeof filters !== 'undefined' && filters ? filters : {}; %>
 <% const safeTransactions = Array.isArray(transactions) ? transactions : []; %>
+<% const highlightedTransactionId = Number(safeFilters.highlight || 0); %>
 
 <div class="mt-4 mb-3">
   <h1 class="h3">Transaction History</h1>
@@ -13,7 +14,6 @@
         <option value="">All Status</option>
         <option value="SUCCESS" <%= safeFilters.status === 'SUCCESS' ? 'selected' : '' %>>SUCCESS</option>
         <option value="FAILED" <%= safeFilters.status === 'FAILED' ? 'selected' : '' %>>FAILED</option>
-        <option value="PENDING" <%= safeFilters.status === 'PENDING' ? 'selected' : '' %>>PENDING</option>
       </select>
     </div>
     <div class="col-md-3 d-grid">
@@ -40,7 +40,7 @@
         <tr><td colspan="7" class="text-center text-muted">No transactions found.</td></tr>
       <% } %>
       <% safeTransactions.forEach(transaction => { %>
-        <tr>
+        <tr id="transaction-<%= transaction.tr_id %>" class="<%= transaction.tr_id === highlightedTransactionId ? 'transaction-highlight' : '' %>">
           <td><%= transaction.reference_no %></td>
           <td><%= transaction.sender_upi %></td>
           <td><%= transaction.receiver_upi %></td>

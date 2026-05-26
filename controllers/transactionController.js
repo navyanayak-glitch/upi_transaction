@@ -33,7 +33,25 @@ async function detail(req, res) {
   });
 }
 
+async function latestReceived(req, res) {
+  const transaction = await transactionModel.getLatestReceivedTransaction(req.session.user.user_id);
+
+  return res.json({
+    transaction: transaction
+      ? {
+          tr_id: transaction.tr_id,
+          reference_no: transaction.reference_no,
+          amount: Number(transaction.amount),
+          created_at: transaction.created_at,
+          sender_name: transaction.sender_name,
+          sender_upi: transaction.sender_upi
+        }
+      : null
+  });
+}
+
 module.exports = {
   history,
-  detail
+  detail,
+  latestReceived
 };

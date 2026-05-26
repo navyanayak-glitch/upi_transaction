@@ -14,6 +14,12 @@ async function showAddAccount(req, res) {
 async function addAccount(req, res) {
   try {
     const { account_no, bank_id, ifsc_code, balance, upi_pin } = req.body;
+
+    if (account_no.length > 10) {
+      req.session.message = { type: 'danger', text: 'Account number must not be more than 10 digits.' };
+      return res.redirect('/bank/add-account');
+    }
+
     const existingAccount = await bankModel.getAccountByNumber(account_no);
 
     if (existingAccount) {
