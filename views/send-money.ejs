@@ -1,21 +1,24 @@
 <%- include('partials/header') %>
 
-<div class="form-card mx-auto mt-4">
+<div class="payment-layout mt-4">
+<div class="form-card payment-card">
+  <span class="eyebrow">UPI transfer</span>
   <h1 class="h3 mb-3">Send Money</h1>
   <% if (accounts.length === 0) { %>
     <div class="alert alert-warning">Please link a bank account before sending money.</div>
     <a href="/bank/add-account" class="btn btn-primary">Add Bank Account</a>
   <% } else { %>
-    <form action="/upi/pay" method="POST">
+    <form action="/upi/pay" method="POST" id="paymentForm">
       <div class="mb-3">
         <label class="form-label">From Account</label>
-        <select name="account_no" class="form-select" required>
+        <select name="account_no" id="sourceAccount" class="form-select" required>
           <% accounts.forEach(account => { %>
-            <option value="<%= account.account_no %>">
+            <option value="<%= account.account_no %>" data-bank="<%= account.bank_name %>" data-balance="<%= Number(account.balance).toFixed(2) %>">
               <%= account.bank_name %> - <%= account.account_no %> (Rs. <%= Number(account.balance).toFixed(2) %>)
             </option>
           <% }) %>
         </select>
+        <small id="accountBalanceHint" class="form-text text-muted"></small>
       </div>
       <div class="mb-3">
         <label class="form-label">Receiver UPI ID</label>
@@ -27,15 +30,47 @@
       </div>
       <div class="mb-3">
         <label class="form-label">Amount</label>
-        <input type="number" name="amount" class="form-control" min="1" step="0.01" required>
+        <input type="number" name="amount" id="paymentAmount" class="form-control" min="1" step="0.01" required>
+        <div class="quick-amounts" aria-label="Quick amount choices">
+          <button type="button" data-amount="100">Rs. 100</button>
+          <button type="button" data-amount="500">Rs. 500</button>
+          <button type="button" data-amount="1000">Rs. 1000</button>
+          <button type="button" data-amount="2000">Rs. 2000</button>
+        </div>
       </div>
       <div class="mb-3">
         <label class="form-label">UPI PIN</label>
-        <input type="password" name="upi_pin" class="form-control" minlength="4" maxlength="6" required>
+        <div class="input-group">
+          <input type="password" name="upi_pin" id="upiPin" class="form-control" minlength="4" maxlength="6" required>
+          <button class="btn btn-outline-primary" type="button" id="togglePinBtn">Show</button>
+        </div>
       </div>
       <button class="btn btn-primary w-100" type="submit">Pay Now</button>
     </form>
   <% } %>
+</div>
+
+<% if (accounts.length > 0) { %>
+  <aside class="payment-review surface" aria-label="Payment review">
+    <span class="eyebrow">Review</span>
+    <h2 class="h5">Transfer Preview</h2>
+    <div class="review-amount" id="reviewAmount">Rs. 0.00</div>
+    <dl>
+      <div>
+        <dt>From</dt>
+        <dd id="reviewAccount">Select account</dd>
+      </div>
+      <div>
+        <dt>To</dt>
+        <dd id="reviewReceiver">Receiver UPI</dd>
+      </div>
+      <div>
+        <dt>Status</dt>
+        <dd id="reviewStatus">Verify receiver before paying</dd>
+      </div>
+    </dl>
+  </aside>
+<% } %>
 </div>
 
 <%- include('partials/footer') %>

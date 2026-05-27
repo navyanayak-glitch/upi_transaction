@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.get('/send', isAuthenticated, upiController.showPay);
 router.get('/history', isAuthenticated, transactionController.history);
+router.get('/export', isAuthenticated, transactionController.exportHistory);
 router.get('/latest-received', isAuthenticated, transactionController.latestReceived);
 router.get('/:id', isAuthenticated, transactionController.detail);
 

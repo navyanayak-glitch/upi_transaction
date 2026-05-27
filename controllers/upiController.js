@@ -104,7 +104,7 @@ async function pay(req, res) {
       'UPDATE bank_accounts SET balance = balance + ? WHERE account_no = ?',
       [transferAmount, receiverAccount.account_no]
     );
-    await connection.execute(
+    const [transactionResult] = await connection.execute(
       `INSERT INTO transactions
         (sender_id, receiver_id, account_no, reference_no, amount, status, transaction_type)
        VALUES (?, ?, ?, ?, ?, 'SUCCESS', 'DEBIT')`,
@@ -123,7 +123,7 @@ async function pay(req, res) {
       if (io) {
         io.to(`user_${receiver.user_id}`).emit('money_received', {
           transaction: {
-            tr_id: referenceNo,
+            tr_id: transactionResult.insertId,
             reference_no: referenceNo,
             amount: transferAmount,
             created_at: new Date(),

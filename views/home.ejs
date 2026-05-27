@@ -1,13 +1,13 @@
 <%- include('partials/header') %>
 
 <section class="home-hero">
-  <div class="row align-items-center g-5">
+  <div class="row align-items-center g-5 hero-content">
     <div class="col-lg-6">
       <p class="hero-kicker">Fast, simple, secure UPI payments</p>
-      <h1 class="hero-title">Your money movement, beautifully organized.</h1>
+      <h1 class="hero-title">UPI Manager</h1>
       <p class="hero-copy">
-        Send money, manage linked accounts, watch balances update, and keep every
-        transaction easy to find from one polished dashboard.
+        A modern transaction workspace for sending money, managing linked bank
+        accounts, and reviewing every payment with clarity.
       </p>
       <div class="hero-actions">
         <% if (currentUser) { %>
@@ -21,6 +21,20 @@
         <span>Instant transfers</span>
         <span>Linked accounts</span>
         <span>Live history</span>
+      </div>
+      <div class="hero-metrics" aria-label="Platform highlights">
+        <div>
+          <strong>24/7</strong>
+          <span>Payment access</span>
+        </div>
+        <div>
+          <strong>Live</strong>
+          <span>Transaction alerts</span>
+        </div>
+        <div>
+          <strong>Secure</strong>
+          <span>UPI PIN checks</span>
+        </div>
       </div>
     </div>
     <div class="col-lg-6">

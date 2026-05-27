@@ -6,13 +6,15 @@ async function dashboard(req, res) {
   const userId = req.session.user.user_id;
   const accounts = await bankModel.getAccountsByUser(userId);
   const recentTransactions = await transactionModel.getRecentTransactions(userId);
+  const transactionSummary = await transactionModel.getTransactionSummary(userId);
   const totalBalance = accounts.reduce((sum, account) => sum + Number(account.balance), 0);
 
   res.render('dashboard', {
     title: 'Dashboard',
     accounts,
     recentTransactions,
-    totalBalance
+    totalBalance,
+    transactionSummary
   });
 }
 

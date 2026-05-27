@@ -1,35 +1,90 @@
 <%- include('partials/header') %>
+<%
+  const summary = transactionSummary || {};
+  const totalCount = Number(summary.total_count || 0);
+  const successCount = Number(summary.success_count || 0);
+  const failedCount = Number(summary.failed_count || 0);
+  const successRate = totalCount ? Math.round((successCount / totalCount) * 100) : 0;
+  const monthSent = Number(summary.month_sent || 0);
+  const monthReceived = Number(summary.month_received || 0);
+  const monthNet = monthReceived - monthSent;
+  const flowMax = Math.max(monthSent, monthReceived, 1);
+%>
 
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mt-4 gap-3">
+<div class="dashboard-hero d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mt-4 gap-3">
   <div>
+    <span class="eyebrow">Money overview</span>
     <h1 class="h3 mb-1">Welcome, <%= currentUser.name %></h1>
-    <p class="text-muted mb-0">UPI ID: <strong><%= currentUser.upi_id %></strong></p>
+    <p class="mb-0">UPI ID: <strong><%= currentUser.upi_id %></strong></p>
   </div>
-  <a href="/upi/pay" class="btn btn-primary">Send Money</a>
+  <div class="hero-actions compact">
+    <a href="/upi/pay" class="btn btn-primary">Send Money</a>
+    <a href="/transaction/history" class="btn btn-light">View History</a>
+  </div>
 </div>
 
 <div class="row g-3 mt-2">
   <div class="col-md-4">
-    <div class="stat-card">
+    <div class="stat-card reveal-card">
       <span>Total Balance</span>
       <strong>Rs. <%= Number(totalBalance).toFixed(2) %></strong>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="stat-card">
-      <span>Linked Accounts</span>
-      <strong><%= accounts.length %></strong>
+    <div class="stat-card reveal-card">
+      <span>This Month Net</span>
+      <strong class="<%= monthNet >= 0 ? 'text-success' : 'text-danger' %>"><%= monthNet >= 0 ? '+' : '-' %> Rs. <%= Math.abs(monthNet).toFixed(2) %></strong>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="stat-card">
-      <span>Recent Transactions</span>
-      <strong><%= recentTransactions.length %></strong>
+    <div class="stat-card reveal-card">
+      <span>Success Rate</span>
+      <strong><%= successRate %>%</strong>
     </div>
   </div>
 </div>
 
-<section class="mt-4">
+<section class="insight-grid mt-4">
+  <div class="insight-panel surface">
+    <div>
+      <span class="eyebrow">Monthly flow</span>
+      <h2 class="h5 mb-3">Sent vs received</h2>
+    </div>
+    <div class="flow-bars">
+      <div>
+        <div class="d-flex justify-content-between small text-muted mb-1">
+          <span>Sent</span>
+          <span>Rs. <%= monthSent.toFixed(2) %></span>
+        </div>
+        <div class="flow-track"><span style="width: <%= monthSent ? Math.max(8, Math.round((monthSent / flowMax) * 100)) : 8 %>%"></span></div>
+      </div>
+      <div>
+        <div class="d-flex justify-content-between small text-muted mb-1">
+          <span>Received</span>
+          <span>Rs. <%= monthReceived.toFixed(2) %></span>
+        </div>
+        <div class="flow-track received"><span style="width: <%= monthReceived ? Math.max(8, Math.round((monthReceived / flowMax) * 100)) : 8 %>%"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="insight-panel surface">
+    <span class="eyebrow">Activity health</span>
+    <h2 class="h5 mb-3"><%= totalCount %> total transactions</h2>
+    <div class="health-ring" style="--score: <%= successRate %>">
+      <strong><%= successRate %>%</strong>
+      <span>successful</span>
+    </div>
+    <p class="text-muted small mb-0 mt-3"><%= failedCount %> failed payments recorded.</p>
+  </div>
+  <div class="insight-panel surface">
+    <span class="eyebrow">Account setup</span>
+    <h2 class="h5 mb-3"><%= accounts.length %> linked accounts</h2>
+    <p class="text-muted mb-3">Last activity: <%= summary.last_activity_at ? new Date(summary.last_activity_at).toLocaleString() : 'No transactions yet' %></p>
+    <a href="/bank/add-account" class="btn btn-sm btn-outline-primary">Add Account</a>
+  </div>
+</section>
+
+<section class="mt-4 reveal-card">
   <div class="d-flex justify-content-between align-items-center mb-2">
     <h2 class="h5 mb-0">Linked Bank Accounts</h2>
     <a href="/bank/add-account" class="btn btn-sm btn-outline-primary">Add Account</a>
@@ -61,7 +116,7 @@
   </div>
 </section>
 
-<section class="mt-4">
+<section class="mt-4 reveal-card">
   <div class="d-flex justify-content-between align-items-center mb-2">
     <h2 class="h5 mb-0">Recent Transactions</h2>
     <a href="/transaction/history" class="btn btn-sm btn-outline-primary">View All</a>

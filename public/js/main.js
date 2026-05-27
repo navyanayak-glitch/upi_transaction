@@ -1,4 +1,5 @@
 const verifyButton = document.getElementById('verifyUpiBtn');
+let verifiedReceiverName = '';
 
 if (verifyButton) {
   verifyButton.addEventListener('click', async () => {
@@ -23,15 +24,104 @@ if (verifyButton) {
       if (data.valid) {
         result.textContent = `Verified: ${data.name}`;
         result.className = 'form-text text-success';
+        verifiedReceiverName = data.name;
+        updatePaymentReview();
       } else {
         result.textContent = data.message;
         result.className = 'form-text text-danger';
+        verifiedReceiverName = '';
+        updatePaymentReview();
       }
     } catch (error) {
       result.textContent = 'Unable to verify UPI ID.';
       result.className = 'form-text text-danger';
+      verifiedReceiverName = '';
+      updatePaymentReview();
     }
   });
+}
+
+const paymentForm = document.getElementById('paymentForm');
+const sourceAccount = document.getElementById('sourceAccount');
+const amountInput = document.getElementById('paymentAmount');
+const receiverInput = document.getElementById('receiverUpiId');
+const balanceHint = document.getElementById('accountBalanceHint');
+const reviewAmount = document.getElementById('reviewAmount');
+const reviewAccount = document.getElementById('reviewAccount');
+const reviewReceiver = document.getElementById('reviewReceiver');
+const reviewStatus = document.getElementById('reviewStatus');
+const togglePinButton = document.getElementById('togglePinBtn');
+const pinInput = document.getElementById('upiPin');
+
+function updatePaymentReview() {
+  if (!paymentForm) {
+    return;
+  }
+
+  const selectedAccount = sourceAccount.options[sourceAccount.selectedIndex];
+  const amount = Number(amountInput.value || 0);
+  const receiverUpi = receiverInput.value.trim();
+  const bankName = selectedAccount ? selectedAccount.dataset.bank : '';
+  const balance = selectedAccount ? selectedAccount.dataset.balance : '';
+
+  if (balanceHint && selectedAccount) {
+    balanceHint.textContent = `Available balance: Rs. ${balance}`;
+  }
+
+  if (reviewAmount) {
+    reviewAmount.textContent = `Rs. ${amount.toFixed(2)}`;
+  }
+
+  if (reviewAccount) {
+    reviewAccount.textContent = selectedAccount ? `${bankName} - ${selectedAccount.value}` : 'Select account';
+  }
+
+  if (reviewReceiver) {
+    reviewReceiver.textContent = verifiedReceiverName
+      ? `${verifiedReceiverName} (${receiverUpi})`
+      : receiverUpi || 'Receiver UPI';
+  }
+
+  if (reviewStatus) {
+    reviewStatus.textContent = verifiedReceiverName ? 'Receiver verified' : 'Verify receiver before paying';
+    reviewStatus.className = verifiedReceiverName ? 'text-success' : '';
+  }
+}
+
+if (paymentForm) {
+  document.querySelectorAll('.quick-amounts button').forEach((button) => {
+    button.addEventListener('click', () => {
+      amountInput.value = button.dataset.amount;
+      updatePaymentReview();
+    });
+  });
+
+  [sourceAccount, amountInput, receiverInput].forEach((field) => {
+    if (field) {
+      field.addEventListener('input', () => {
+        if (field === receiverInput) {
+          verifiedReceiverName = '';
+          const result = document.getElementById('verifyResult');
+          if (result) {
+            result.textContent = '';
+            result.className = 'form-text';
+          }
+        }
+        updatePaymentReview();
+      });
+      field.addEventListener('change', updatePaymentReview);
+    }
+  });
+
+  if (togglePinButton && pinInput) {
+    togglePinButton.addEventListener('click', () => {
+      const shouldShow = pinInput.type === 'password';
+      pinInput.type = shouldShow ? 'text' : 'password';
+      togglePinButton.textContent = shouldShow ? 'Hide' : 'Show';
+    });
+  }
+
+  updatePaymentReview();
 }
 
 const RECEIVED_PAYMENT_KEY = 'upi:lastSeenReceivedTransactionId';
