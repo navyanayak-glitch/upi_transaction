@@ -100,6 +100,55 @@ Open the app in your browser:
 http://localhost:3000
 ```
 
+## Deploy on Railway
+
+Railway is a simple option for this project because it can run the Node.js app and a MySQL database in the same project.
+
+1. Push the project to GitHub.
+2. In Railway, create a new project from the GitHub repository.
+3. Set the root directory to `upi_transaction` if Railway asks for it.
+4. Add a MySQL database service in the same Railway project.
+5. In the Node app service variables, add:
+
+```env
+NODE_ENV=production
+SESSION_SECRET=replace_with_a_long_random_secret
+```
+
+6. Add database variables using Railway's MySQL service values. This app supports either:
+
+```env
+DATABASE_URL=mysql://user:password@host:3306/database
+```
+
+or individual variables:
+
+```env
+DB_HOST=your_mysql_host
+DB_PORT=3306
+DB_USER=your_mysql_user
+DB_PASSWORD=your_mysql_password
+DB_NAME=your_mysql_database
+```
+
+Railway also exposes MySQL variables such as `MYSQL_URL`, `MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER`, `MYSQLPASSWORD`, and `MYSQLDATABASE`; the app can read those too.
+
+7. Use these deploy commands:
+
+```text
+Build Command: npm install
+Start Command: npm start
+```
+
+8. Import the database schema into the production MySQL database:
+
+```bash
+mysql -h your_mysql_host -P 3306 -u your_mysql_user -p your_mysql_database < database/schema.sql
+mysql -h your_mysql_host -P 3306 -u your_mysql_user -p your_mysql_database < database/seed.sql
+```
+
+Do not upload your local `.env` file to GitHub or Railway. Add secrets in the hosting dashboard.
+
 ## Main Routes
 
 - `/` - Home page

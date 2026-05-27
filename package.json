@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A complete UPI Transaction Management System built with Node.js, Express, MySQL, EJS, and Bootstrap.",
   "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
