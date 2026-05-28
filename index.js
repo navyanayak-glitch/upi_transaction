@@ -14,6 +14,7 @@ const app = express();
 const http = require('http');
 const { initRealtime } = require('./realtime');
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -75,6 +76,6 @@ const server = http.createServer(app);
 // Initialize realtime (Socket.IO) with the HTTP server
 initRealtime(server);
 
-server.listen(PORT, () => {
-  console.log(`UPI Transaction Management System running on http://localhost:${PORT}`);
+server.listen(PORT, HOST, () => {
+  console.log(`UPI Transaction Management System running on http://${HOST}:${PORT}`);
 });
