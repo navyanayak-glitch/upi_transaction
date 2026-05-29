@@ -4,7 +4,7 @@ require('dotenv').config();
 const databaseUrl = process.env.DATABASE_URL || process.env.MYSQL_URL;
 
 const pool = mysql.createPool({
-  connectionUri: databaseUrl || undefined,
+  url: databaseUrl || undefined,
   host: databaseUrl ? undefined : process.env.DB_HOST || process.env.MYSQLHOST || 'localhost',
   port: databaseUrl ? undefined : Number(process.env.DB_PORT || process.env.MYSQLPORT || 3306),
   user: databaseUrl ? undefined : process.env.DB_USER || process.env.MYSQLUSER || 'root',
